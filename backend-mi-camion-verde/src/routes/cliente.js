@@ -11,8 +11,14 @@ const {
 const router = express.Router();
 router.use(requireAuth, allow('cliente'));
 
-const uploadDir = path.join(__dirname, '..', '..', 'uploads');
-fs.mkdirSync(uploadDir, { recursive: true });
+const uploadDir = process.env.VERCEL
+  ? path.join('/tmp', 'mcv-uploads')
+  : path.join(__dirname, '..', '..', 'uploads');
+try {
+  fs.mkdirSync(uploadDir, { recursive: true });
+} catch (err) {
+  console.error('No se pudo preparar la carpeta de fotos', err.message);
+}
 const upload = multer({
   dest: uploadDir,
   limits: { fileSize: 8 * 1024 * 1024, files: 3 },

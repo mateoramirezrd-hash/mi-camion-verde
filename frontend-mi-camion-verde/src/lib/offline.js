@@ -1,3 +1,5 @@
+import { apiUrl } from './api';
+
 const DB = 'mcv-outbox';
 
 function openDb() {
@@ -43,7 +45,7 @@ export async function sincronizarQuejas(token) {
     if (item.latitud) form.set('latitud', item.latitud);
     if (item.longitud) form.set('longitud', item.longitud);
     if (item.foto) form.set('fotos', item.foto, item.fotoName || 'reporte.jpg');
-    const res = await fetch('/api/cliente/quejas', {
+    const res = await fetch(apiUrl('/api/cliente/quejas'), {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: form,

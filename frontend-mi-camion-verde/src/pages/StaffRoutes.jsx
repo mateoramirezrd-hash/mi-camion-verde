@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { api } from '../lib/api';
+import { api, apiUrl } from '../lib/api';
 import { fieldClass, Card, Chip, ErrorNote, Loading, PageTitle } from '../components/ui';
 
 export default function StaffRoutes() {
@@ -124,7 +124,7 @@ export function StaffComplaints() {
             <Chip>{item.estado.replaceAll('_', ' ')}</Chip>
           </div>
           <p className="text-sm text-moss">{item.nombres} {item.apellidos} · {item.zona} · {item.referencia_ubicacion}</p>
-          {item.foto && <img src={item.foto} alt="Evidencia del reporte" className="mt-3 h-36 w-full rounded-2xl object-cover" />}
+          {item.foto && <img src={apiUrl(item.foto)} alt="Evidencia del reporte" className="mt-3 h-36 w-full rounded-2xl object-cover" />}
           <form
             className="mt-3 grid gap-2 md:grid-cols-[1fr_1fr_auto]"
             onSubmit={(event) => {

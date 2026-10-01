@@ -30,7 +30,8 @@ export default defineConfig({
         navigateFallback: 'index.html',
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api/cliente/'),
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/cliente/')
+              || (url.hostname === 'mi-camion-verde-fawn.vercel.app' && url.pathname.startsWith('/api/cliente/')),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'mcv-api',

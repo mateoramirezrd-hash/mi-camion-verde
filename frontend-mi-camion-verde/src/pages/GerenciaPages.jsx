@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { api, getToken } from '../lib/api';
+import { api, apiUrl, getToken } from '../lib/api';
 import { cop, kg, mesCorto } from '../lib/format';
 import { Card, Chip, ErrorNote, Loading, PageTitle, fieldClass } from '../components/ui';
 
 async function descargarInforme() {
-  const res = await fetch('/api/gerencia/reporte.csv', { headers: { Authorization: `Bearer ${getToken()}` } });
+  const res = await fetch(apiUrl('/api/gerencia/reporte.csv'), { headers: { Authorization: `Bearer ${getToken()}` } });
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

@@ -1,5 +1,13 @@
 const CACHE_KEY = 'mcv-cache';
 
+export const API_URL = (import.meta.env.VITE_API_URL || 'https://mi-camion-verde-fawn.vercel.app').replace(/\/$/, '');
+
+export function apiUrl(path) {
+  if (!path) return API_URL;
+  if (/^https?:\/\//.test(path)) return path;
+  return `${API_URL}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
 export function getToken() {
   return localStorage.getItem('mcv-token') || '';
 }
@@ -24,7 +32,7 @@ export async function api(path, { method = 'GET', body, form } = {}) {
   }
 
   try {
-    const res = await fetch(path, { method, headers, body: payload });
+    const res = await fetch(apiUrl(path), { method, headers, body: payload });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'No pudimos completar la acción');
     if (method === 'GET') {
