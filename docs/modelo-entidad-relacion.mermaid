@@ -1,0 +1,207 @@
+erDiagram
+    ROLES ||--o{ USUARIOS : "tiene"
+    USUARIOS ||--o| CLIENTES : "es"
+    USUARIOS ||--o| PREFERENCIAS_NOTIFICACION : "configura"
+    USUARIOS ||--o{ DISPOSITIVOS_PUSH : "registra"
+    USUARIOS ||--o{ NOTIFICACIONES : "recibe"
+    USUARIOS ||--o{ AUDITORIA : "genera"
+    ZONAS ||--o{ DIRECCIONES : "contiene"
+    ZONAS ||--o{ RUTAS : "cubre"
+    ZONAS ||--o{ INCIDENCIAS : "afecta"
+    ZONAS ||--o{ QUEJAS_REPORTES : "ubica"
+    CLIENTES ||--o{ DIRECCIONES : "registra"
+    CLIENTES ||--o{ QUEJAS_REPORTES : "envia"
+    CLIENTES ||--o{ SUSCRIPCIONES : "contrata"
+    CLIENTES ||--o{ SOLICITUDES_RECOLECCION : "crea"
+    VEHICULOS ||--o{ RUTAS : "asignado a"
+    VEHICULOS ||--o{ RECOLECCIONES : "realiza"
+    RUTAS ||--o{ HORARIOS_RUTA : "define"
+    RUTAS ||--o{ INCIDENCIAS : "sufre"
+    RUTAS ||--o{ SOLICITUDES_RECOLECCION : "agrupa"
+    QUEJAS_REPORTES ||--o{ QUEJA_EVIDENCIAS : "adjunta"
+    TIPOS_RESIDUO ||--o{ GUIA_SEPARACION : "explica"
+    TIPOS_RESIDUO ||--o{ SOLICITUD_DETALLE : "clasifica"
+    TIPOS_RESIDUO ||--o{ RECOLECCION_DETALLE : "clasifica"
+    DIRECCIONES ||--o{ SOLICITUDES_RECOLECCION : "punto de recogida"
+    SOLICITUDES_RECOLECCION ||--o{ SOLICITUD_DETALLE : "incluye"
+    SOLICITUDES_RECOLECCION ||--o| RECOLECCIONES : "se ejecuta en"
+    RECOLECCIONES ||--o{ RECOLECCION_DETALLE : "pesa"
+    PLANES ||--o{ SUSCRIPCIONES : "aplica en"
+    SUSCRIPCIONES ||--o{ FACTURAS : "genera"
+    FACTURAS ||--o{ PAGOS : "recibe"
+
+    ROLES {
+        int id PK
+        varchar nombre
+        varchar descripcion
+    }
+    USUARIOS {
+        int id PK
+        int rol_id FK
+        varchar nombres
+        varchar apellidos
+        varchar email
+        varchar password_hash
+        varchar telefono
+        enum estado
+    }
+    CLIENTES {
+        int id PK
+        int usuario_id FK
+        enum tipo_cliente
+        enum tipo_documento
+        varchar numero_documento
+    }
+    ZONAS {
+        int id PK
+        varchar nombre
+        varchar municipio
+        boolean es_piloto
+    }
+    DIRECCIONES {
+        int id PK
+        int cliente_id FK
+        int zona_id FK
+        varchar direccion
+        decimal latitud
+        decimal longitud
+    }
+    VEHICULOS {
+        int id PK
+        varchar placa
+        decimal capacidad_kg
+        enum estado
+    }
+    RUTAS {
+        int id PK
+        int zona_id FK
+        int vehiculo_id FK
+        varchar nombre
+        boolean activa
+    }
+    HORARIOS_RUTA {
+        int id PK
+        int ruta_id FK
+        enum dia_semana
+        time hora_paso
+        enum tipo_recoleccion
+    }
+    INCIDENCIAS {
+        int id PK
+        int zona_id FK
+        int ruta_id FK
+        enum tipo
+        int retraso_minutos
+        time nueva_hora_estimada
+        enum estado
+    }
+    QUEJAS_REPORTES {
+        int id PK
+        int cliente_id FK
+        int zona_id FK
+        enum tipo
+        text descripcion
+        decimal latitud
+        decimal longitud
+        enum estado
+    }
+    QUEJA_EVIDENCIAS {
+        int id PK
+        int queja_id FK
+        varchar url
+        enum tipo
+    }
+    TIPOS_RESIDUO {
+        int id PK
+        varchar nombre
+        enum categoria
+        enum color_contenedor
+    }
+    GUIA_SEPARACION {
+        int id PK
+        int tipo_residuo_id FK
+        varchar titulo
+        text contenido
+        boolean publicada
+    }
+    PREFERENCIAS_NOTIFICACION {
+        int id PK
+        int usuario_id FK
+        boolean recordatorio_activo
+        int minutos_antes
+        boolean alertas_retraso
+    }
+    DISPOSITIVOS_PUSH {
+        int id PK
+        int usuario_id FK
+        enum plataforma
+        text token_push
+        boolean activo
+    }
+    NOTIFICACIONES {
+        int id PK
+        int usuario_id FK
+        enum tipo
+        varchar titulo
+        boolean leida
+        boolean enviada_push
+    }
+    SOLICITUDES_RECOLECCION {
+        int id PK
+        int cliente_id FK
+        int direccion_id FK
+        int ruta_id FK
+        date fecha_programada
+        enum estado
+    }
+    SOLICITUD_DETALLE {
+        int id PK
+        int solicitud_id FK
+        int tipo_residuo_id FK
+        decimal cantidad_estimada_kg
+    }
+    RECOLECCIONES {
+        int id PK
+        int solicitud_id FK
+        int vehiculo_id FK
+        int registrado_por FK
+        enum estado
+    }
+    RECOLECCION_DETALLE {
+        int id PK
+        int recoleccion_id FK
+        int tipo_residuo_id FK
+        decimal peso_kg
+    }
+    PLANES {
+        int id PK
+        varchar nombre
+        enum frecuencia
+        decimal precio
+    }
+    SUSCRIPCIONES {
+        int id PK
+        int cliente_id FK
+        int plan_id FK
+        date fecha_inicio
+        enum estado
+    }
+    FACTURAS {
+        int id PK
+        int suscripcion_id FK
+        varchar numero
+        decimal total
+        enum estado
+    }
+    PAGOS {
+        int id PK
+        int factura_id FK
+        decimal monto
+        enum metodo
+    }
+    AUDITORIA {
+        bigint id PK
+        int usuario_id FK
+        varchar accion
+        varchar entidad
+    }
